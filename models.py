@@ -7,6 +7,7 @@ class Admin(UserMixin, db.Model):
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(80), unique=True, nullable=False)
     password_hash = db.Column(db.String(256), nullable=False)
+    is_owner = db.Column(db.Boolean, default=False)
 
 class Movie(db.Model):
     id = db.Column(db.Integer, primary_key=True)

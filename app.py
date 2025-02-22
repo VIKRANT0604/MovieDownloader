@@ -28,12 +28,16 @@ login_manager.login_view = 'login'
 def load_user(user_id):
     return Admin.query.get(int(user_id))
 
-# Create tables and admin user
+# Create tables and owner account
 with app.app_context():
     db.create_all()
-    if not Admin.query.filter_by(username='admin').first():
-        admin = Admin(username='admin', password_hash=generate_password_hash('admin123'))
-        db.session.add(admin)
+    if not Admin.query.filter_by(username='vicky_choudhary_0604').first():
+        owner = Admin(
+            username='vicky_choudhary_0604',
+            password_hash=generate_password_hash('vicky0604@#'),
+            is_owner=True
+        )
+        db.session.add(owner)
         db.session.commit()
 
 @app.route('/')
@@ -50,7 +54,7 @@ def login():
     if request.method == 'POST':
         username = request.form.get('username')
         password = request.form.get('password')
-        
+
         admin = Admin.query.filter_by(username=username).first()
         if admin and check_password_hash(admin.password_hash, password):
             login_user(admin)
@@ -95,3 +99,56 @@ def delete_movie(movie_id):
     db.session.commit()
     flash('Movie deleted successfully')
     return redirect(url_for('admin_dashboard'))
+
+@app.route('/admin/manage_admins')
+@login_required
+def manage_admins():
+    if not current_user.is_owner:
+        flash('Only owner can manage admins')
+        return redirect(url_for('admin_dashboard'))
+    admins = Admin.query.all()
+    return render_template('admin/manage_admins.html', admins=admins)
+
+@app.route('/admin/add_admin', methods=['GET', 'POST'])
+@login_required
+def add_admin():
+    if not current_user.is_owner:
+        flash('Only owner can add new admins')
+        return redirect(url_for('admin_dashboard'))
+
+    if request.method == 'POST':
+        username = request.form.get('username')
+        password = request.form.get('password')
+
+        if Admin.query.filter_by(username=username).first():
+            flash('Username already exists')
+            return redirect(url_for('add_admin'))
+
+        admin = Admin(
+            username=username,
+            password_hash=generate_password_hash(password),
+            is_owner=False
+        )
+        db.session.add(admin)
+        db.session.commit()
+        flash('Admin added successfully')
+        return redirect(url_for('manage_admins'))
+
+    return render_template('admin/add_admin.html')
+
+@app.route('/admin/delete_admin/<int:admin_id>')
+@login_required
+def delete_admin(admin_id):
+    if not current_user.is_owner:
+        flash('Only owner can delete admins')
+        return redirect(url_for('admin_dashboard'))
+
+    admin = Admin.query.get_or_404(admin_id)
+    if admin.is_owner:
+        flash('Cannot delete owner account')
+        return redirect(url_for('manage_admins'))
+
+    db.session.delete(admin)
+    db.session.commit()
+    flash('Admin deleted successfully')
+    return redirect(url_for('manage_admins'))
