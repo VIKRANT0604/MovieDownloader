@@ -15,8 +15,17 @@
         {% for movie in movies %}
         <a href="{{ url_for('movie_details', movie_id=movie.id) }}" class="list-group-item list-group-item-action">
             <div class="d-flex align-items-center">
-                <h5 class="mb-0">{{ movie.title }}</h5>
-                <span class="badge bg-secondary ms-2">{{ movie.genre }}</span>
+                {% if movie.poster_url %}
+                <img src="{{ movie.poster_url }}" alt="{{ movie.title }}" class="me-3" style="width: 50px; height: 70px; object-fit: cover;">
+                {% else %}
+                <div class="me-3 bg-secondary d-flex align-items-center justify-content-center" style="width: 50px; height: 70px;">
+                    <i class="fas fa-film"></i>
+                </div>
+                {% endif %}
+                <div>
+                    <h5 class="mb-1">{{ movie.title }}</h5>
+                    <span class="badge bg-secondary">{{ movie.genre }}</span>
+                </div>
             </div>
         </a>
         {% endfor %}
