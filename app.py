@@ -3,7 +3,8 @@ import logging
 from flask import Flask, render_template, request, redirect, url_for, flash
 from flask_login import LoginManager, login_user, login_required, logout_user, current_user
 from werkzeug.security import generate_password_hash, check_password_hash
-from models import db, Admin, Movie
+from models import db, Admin, Movie, Review
+from datetime import datetime
 
 # Configure logging
 logging.basicConfig(level=logging.DEBUG)
@@ -153,7 +154,33 @@ def delete_admin(admin_id):
     flash('Admin deleted successfully')
     return redirect(url_for('manage_admins'))
 
+@app.route('/movie/<int:movie_id>/review', methods=['POST'])
+def add_review(movie_id):
+    movie = Movie.query.get_or_404(movie_id)
+
+    reviewer_name = request.form.get('reviewer_name')
+    rating = int(request.form.get('rating'))
+    comment = request.form.get('comment')
+
+    if not reviewer_name or not rating or rating < 1 or rating > 5:
+        flash('Please provide your name and a valid rating')
+        return redirect(url_for('movie_details', movie_id=movie_id))
+
+    review = Review(
+        reviewer_name=reviewer_name,
+        rating=rating,
+        comment=comment,
+        movie_id=movie_id,
+        created_at=datetime.utcnow()
+    )
+
+    db.session.add(review)
+    db.session.commit()
+    flash('Thank you for your review!')
+    return redirect(url_for('movie_details', movie_id=movie_id))
+
 @app.route('/movie/<int:movie_id>')
 def movie_details(movie_id):
     movie = Movie.query.get_or_404(movie_id)
-    return render_template('movie_details.html', movie=movie)
+    reviews = movie.reviews
+    return render_template('movie_details.html', movie=movie, reviews=reviews)
