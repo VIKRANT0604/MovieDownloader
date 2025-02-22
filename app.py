@@ -152,3 +152,8 @@ def delete_admin(admin_id):
     db.session.commit()
     flash('Admin deleted successfully')
     return redirect(url_for('manage_admins'))
+
+@app.route('/movie/<int:movie_id>')
+def movie_details(movie_id):
+    movie = Movie.query.get_or_404(movie_id)
+    return render_template('movie_details.html', movie=movie)

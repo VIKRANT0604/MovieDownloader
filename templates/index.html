@@ -10,29 +10,16 @@
     </div>
 </div>
 
-<div class="row row-cols-1 row-cols-md-3 g-4">
-    {% for movie in movies %}
-    <div class="col">
-        <div class="card h-100">
-            {% if movie.poster_url %}
-            <img src="{{ movie.poster_url }}" class="card-img-top" alt="{{ movie.title }}">
-            {% else %}
-            <div class="card-img-top bg-secondary text-center py-5">
-                <i class="fas fa-film fa-3x"></i>
+<div class="container">
+    <div class="list-group">
+        {% for movie in movies %}
+        <a href="{{ url_for('movie_details', movie_id=movie.id) }}" class="list-group-item list-group-item-action">
+            <div class="d-flex align-items-center">
+                <h5 class="mb-0">{{ movie.title }}</h5>
+                <span class="badge bg-secondary ms-2">{{ movie.genre }}</span>
             </div>
-            {% endif %}
-            <div class="card-body">
-                <h5 class="card-title">{{ movie.title }}</h5>
-                <p class="card-text">{{ movie.description }}</p>
-                <p class="badge bg-secondary">{{ movie.genre }}</p>
-            </div>
-            <div class="card-footer">
-                <a href="{{ movie.download_url }}" class="btn btn-primary w-100" target="_blank">
-                    <i class="fas fa-download me-2"></i>Download
-                </a>
-            </div>
-        </div>
+        </a>
+        {% endfor %}
     </div>
-    {% endfor %}
 </div>
 {% endblock %}
