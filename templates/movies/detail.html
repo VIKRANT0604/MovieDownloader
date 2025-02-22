@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-4">
+        <img src="{{ movie.poster_url }}" class="img-fluid rounded" alt="{{ movie.title }}" 
+             onerror="this.src='https://via.placeholder.com/300x450?text=No+Poster'">
+    </div>
+    <div class="col-md-8">
+        <h2>{{ movie.title }}</h2>
+        <span class="badge bg-secondary mb-3">{{ movie.genre }}</span>
+        <p class="lead">{{ movie.description }}</p>
+        <a href="{{ movie.download_link }}" class="btn btn-success btn-lg" target="_blank">
+            <i class="fas fa-download"></i> Download Movie
+        </a>
+    </div>
+</div>
+{% endblock %}

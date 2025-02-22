@@ -1,0 +1,27 @@
+.card-img-top {
+    height: 300px;
+    object-fit: cover;
+}
+
+.card-title {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.card-text {
+    height: 4.5em;
+    overflow: hidden;
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+}
+
+.table td {
+    vertical-align: middle;
+}
+
+.text-truncate {
+    max-width: 200px;
+    display: inline-block;
+}

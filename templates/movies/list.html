@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+
+{% block content %}
+{% if query %}
+<h2 class="mb-4">Search Results for "{{ query }}"</h2>
+{% else %}
+<h2 class="mb-4">Available Movies</h2>
+{% endif %}
+
+<div class="row row-cols-1 row-cols-md-3 g-4">
+    {% for movie in movies %}
+    <div class="col">
+        <div class="card h-100">
+            <img src="{{ movie.poster_url }}" class="card-img-top" alt="{{ movie.title }}" onerror="this.src='https://via.placeholder.com/300x450?text=No+Poster'">
+            <div class="card-body">
+                <h5 class="card-title">{{ movie.title }}</h5>
+                <p class="card-text">{{ movie.description[:100] }}...</p>
+                <p class="badge bg-secondary">{{ movie.genre }}</p>
+            </div>
+            <div class="card-footer">
+                <a href="{{ url_for('movie_detail', movie_id=movie.id) }}" class="btn btn-primary">View Details</a>
+            </div>
+        </div>
+    </div>
+    {% else %}
+    <div class="col-12 text-center">
+        <p class="lead">No movies found.</p>
+    </div>
+    {% endfor %}
+</div>
+{% endblock %}

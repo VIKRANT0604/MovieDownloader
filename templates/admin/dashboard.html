@@ -1,0 +1,43 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h2>Movie Management</h2>
+    <a href="{{ url_for('add_movie') }}" class="btn btn-primary">
+        <i class="fas fa-plus me-2"></i>Add Movie
+    </a>
+</div>
+
+<div class="table-responsive">
+    <table class="table table-hover">
+        <thead>
+            <tr>
+                <th>Title</th>
+                <th>Genre</th>
+                <th>Download URL</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for movie in movies %}
+            <tr>
+                <td>{{ movie.title }}</td>
+                <td>{{ movie.genre }}</td>
+                <td>
+                    <a href="{{ movie.download_url }}" target="_blank" class="text-truncate">
+                        {{ movie.download_url }}
+                    </a>
+                </td>
+                <td>
+                    <a href="{{ url_for('delete_movie', movie_id=movie.id) }}" 
+                       class="btn btn-danger btn-sm"
+                       onclick="return confirm('Are you sure you want to delete this movie?')">
+                        <i class="fas fa-trash"></i>
+                    </a>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}
